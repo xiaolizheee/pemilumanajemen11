@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemilu Manajemen 11 - Universitas Siber Muhammadiyah</title>
+  <style>
+    :root {
+      --primary-color: #003366;
+      --secondary-color: #0056b3;
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --error-color: #d9534f;
+      --success-color: #5cb85c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden;
+      padding: 30px;
+    }
+
+    .slide {
+      display: none;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    h2 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    p.subtitle {
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--secondary-color);
+      outline: none;
+    }
+
+    .note {
+      font-size: 0.85em;
+      color: #777;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Candidate Cards */
+    .candidates-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .candidate-card {
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .candidate-card:hover {
+      border-color: var(--secondary-color);
+      transform: translateY(-2px);
+    }
+
+    .candidate-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #ddd;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .candidate-title {
+      font-weight: bold;
+      font-size: 1.1em;
+      margin-bottom: 5px;
+    }
+
+    .candidate-visi {
+      font-size: 0.9em;
+      color: #555;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+
+    /* Modal Style */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      max-width: 450px;
+      width: 100%;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    /* Quick Count */
+    .bar-container {
+      margin: 15px 0;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9em;
+      margin-bottom: 5px;
+    }
+
+    .progress-bar {
+      height: 20px;
+      background-color: #e9ecef;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary-color);
+      width: 0%;
+      transition: width 0.5s ease-in-out;
+    }
+
+    .error-msg {
+      color: var(--error-color);
+      font-size: 0.85em;
+      margin-top: 5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- SLIDE 1: PENGISIAN EMAIL -->
+  <div id="slide1" class="slide active">
+    <h2>Pemilu Manajemen 11</h2>
+    <p class="subtitle">Universitas Siber Muhammadiyah</p>
+    
+    <div class="form-group">
+      <label for="emailInput">Email Kampus Resmi:</label>
+      <input type="email" id="emailInput" placeholder="contoh@sibermu.ac.id">
+      <div id="emailError" class="error-msg">Email wajib menggunakan domain @sibermu.ac.id</div>
+    </div>
+
+    <p class="note">
+      * Catatan: Hanya email berakhiran <strong>@sibermu.ac.id</strong> yang dapat memberikan suara. Setiap email hanya dapat memilih 1 kali.
+    </p>
+    <br>
+    <button class="btn" id="btnNextSlide1" onclick="goToSlide2()">Lanjut ke Bilik Suara →</button>
+  </div>
+
+  <!-- SLIDE 2: BILIK SUARA -->
+  <div id="slide2" class="slide">
+    <h2>Pilih Calon Ketua Umum</h2>
+    <p class="subtitle">Silakan tentukan pilihan Anda</p>
+
+    <div class="candidates-container">
+      <!-- Kandidat 1 -->
+      <div class="candidate-card">
+        <div class="candidate-img">Foto 01</div>
+        <div class="candidate-title">Kandidat Nomor 01</div>
+        <div class="candidate-visi">"Mewujudkan HIMA yang Inovatif dan Kolaboratif"</div>
+        <button class="btn" onclick="openModal('Kandidat 01')">Pilih Kandidat 01</button>
+      </div>
+
+      <!-- Kandidat 2 -->
+      <div class="candidate-card">
+        <div class="candidate-img">Foto 02</div>
+        <div class="candidate-title">Kandidat Nomor 02</div>
+        <div class="candidate-visi">"Membangun Sinergi dan Profesionalisme Mahasiswa"</div>
+        <button class="btn" onclick="openModal('Kandidat 02')">Pilih Kandidat 02</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: HASIL & QUICK COUNT -->
+  <div id="slide3" class="slide">
+    <h2>Terima Kasih!</h2>
+    <p class="subtitle">Suara Anda telah berhasil direkam.</p>
+
+    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+      <p><strong>Total Suara Masuk:</strong> <span id="totalSuaraText">0</span> Suara</p>
+    </div>
+
+    <h3>Laporan Quick Count Temporary</h3>
+
+    <div class="bar-container">
+      <div class="bar-label">
+        <span>Paslon 01</span>
+        <span id="paslon1Stat">0% (0 Suara)</span>
+      </div>
+      <div class="progress-bar">
+        <div id="paslon1Bar" class="progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div class="bar-container">
+      <div class="bar-label">
+        <span>Paslon 02</span>
+        <span id="paslon2Stat">0% (0 Suara)</span>
+      </div>
+      <div class="progress-bar">
+        <div id="paslon2Bar" class="progress-fill" style="width: 0%; background-color: var(--secondary-color);"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL KONFIRMASI -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <h3>Konfirmasi Pilihan Anda</h3>
+    <p style="margin: 15px 0;">Apakah Anda yakin ingin memberikan suara kepada <strong id="modalCandidate"></strong>?</p>
+    <p style="font-size: 0.9em; color: #555;">Email: <strong id="modalEmail"></strong></p>
+    <p style="font-size: 0.8em; color: var(--error-color); margin-top: 10px;">Pilihan Anda bersifat final dan tidak dapat diubah kembali.</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Kembali</button>
+      <button class="btn" id="btnSubmitVote" onclick="submitVote()">Ya, Kirim Suara</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxroGQsj26ZbnwskgUyu7l3il9wLQcpvZKKdW82Byo2NgSqWOYdJaj-_h5pJRBnoV6nIg/exec";
+
+  let selectedCandidate = "";
+  let userEmail = "";
+
+  function goToSlide2() {
+    const emailInput = document.getElementById("emailInput").value.trim().toLowerCase();
+    const emailError = document.getElementById("emailError");
+
+    // Perbaikan: Memastikan input email mengandung username minimal 1 karakter sebelum @sibermu.ac.id
+    if (!emailInput.endsWith("@sibermu.ac.id") || emailInput.length <= 14) {
+      emailError.style.display = "block";
+      return;
+    }
+
+    emailError.style.display = "none";
+    userEmail = emailInput;
+
+    document.getElementById("slide1").classList.remove("active");
+    document.getElementById("slide2").classList.add("active");
+  }
+
+  function openModal(kandidat) {
+    selectedCandidate = kandidat;
+    document.getElementById("modalCandidate").innerText = kandidat;
+    document.getElementById("modalEmail").innerText = userEmail;
+    document.getElementById("confirmModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("confirmModal").style.display = "none";
+  }
+
+  function submitVote() {
+    const btnSubmit = document.getElementById("btnSubmitVote");
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "Mengirim...";
+
+    // Membuat iframe rahasia agar pengiriman form tidak terhalang CORS
+    let iframe = document.getElementById("hidden_iframe");
+    if (!iframe) {
+      iframe = document.createElement("iframe");
+      iframe.name = "hidden_iframe";
+      iframe.id = "hidden_iframe";
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+    }
+
+    let form = document.createElement("form");
+    form.action = SCRIPT_URL;
+    form.method = "POST";
+    form.target = "hidden_iframe";
+
+    let inputEmail = document.createElement("input");
+    inputEmail.type = "hidden";
+    inputEmail.name = "email";
+    inputEmail.value = userEmail;
+    form.appendChild(inputEmail);
+
+    let inputKandidat = document.createElement("input");
+    inputKandidat.type = "hidden";
+    inputKandidat.name = "kandidat";
+    inputKandidat.value = selectedCandidate;
+    form.appendChild(inputKandidat);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    // Beralih ke slide quick count dan load data terbaru
+    setTimeout(() => {
+      closeModal();
+      loadQuickCount();
+      document.getElementById("slide2").classList.remove("active");
+      document.getElementById("slide3").classList.add("active");
+    }, 1500);
+  }
+
+  function loadQuickCount() {
+    // Memanggil API via Script Tag (JSONP) untuk menghindari pemblokiran CORS
+    const oldScript = document.getElementById("jsonp_script");
+    if (oldScript) oldScript.remove();
+
+    const script = document.createElement('script');
+    script.id = "jsonp_script";
+    script.src = `${SCRIPT_URL}?callback=handleQuickCountResponse&t=${new Date().getTime()}`;
+    document.body.appendChild(script);
+  }
+
+  function handleQuickCountResponse(data) {
+    if (data.status === "success") {
+      const total = data.totalSuara;
+      const p1 = data.paslon1;
+      const p2 = data.paslon2;
+
+      const p1Pct = total > 0 ? Math.round((p1 / total) * 100) : 0;
+      const p2Pct = total > 0 ? Math.round((p2 / total) * 100) : 0;
+
+      document.getElementById("totalSuaraText").innerText = total;
+      
+      document.getElementById("paslon1Stat").innerText = `${p1Pct}% (${p1} Suara)`;
+      document.getElementById("paslon1Bar").style.width = `${p1Pct}%`;
+
+      document.getElementById("paslon2Stat").innerText = `${p2Pct}% (${p2} Suara)`;
+      document.getElementById("paslon2Bar").style.width = `${p2Pct}%`;
+    }
+  }
+</script>
+
+</body>
+</html>
