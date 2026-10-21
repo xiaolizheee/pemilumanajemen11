@@ -1,430 +1,403 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pemilu Manajemen 11 - Universitas Siber Muhammadiyah</title>
-  <style>
-    :root {
-      --primary-color: #003366;
-      --secondary-color: #0056b3;
-      --bg-color: #f4f6f9;
-      --card-bg: #ffffff;
-      --text-color: #333333;
-      --error-color: #d9534f;
-      --success-color: #5cb85c;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemilu Manajemen 11</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#101B33; --muted:#5B6781; --paper:#EDF1F7; --card:#fff; --line:#D5DDEA;
+  --c1:#2447F5; --c2:#0E9F8E; --ok:#14804A; --bad:#C62F3E; --warn:#B45F06;
+  --radius:14px;
+  --head:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Instrument Sans','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.5;min-height:100vh}
+h1,h2,h3{font-family:var(--head);margin:0;line-height:1.15}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #8FA2FF;outline-offset:2px}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+.top{max-width:960px;margin:0 auto;padding:22px 20px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--head);font-weight:800;font-size:1.15rem}
+.steps{display:flex;gap:8px;list-style:none;margin:0;padding:0;font-size:.85rem;color:var(--muted)}
+.steps li{padding:4px 12px;border-radius:99px;border:1px solid var(--line);background:#fff}
+.steps li.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.steps li.done{color:var(--ok);border-color:#BFE3CF}
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
+main{max-width:960px;margin:0 auto;padding:28px 20px 60px}
+.slide{display:none}
+.slide.active{display:block;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.active{animation:none}}
 
-    .container {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 600px;
-      overflow: hidden;
-      padding: 30px;
-    }
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.login{max-width:520px;margin:6vh auto 0}
+.login h1{font-size:2rem;margin-bottom:8px}
+.login p{color:var(--muted);margin:0 0 22px}
+label{display:block;font-weight:600;margin-bottom:6px}
+input[type=email]{width:100%;font:inherit;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+input[type=email].bad{border-color:var(--bad)}
+input[type=email].good{border-color:var(--ok)}
+.hint{min-height:1.4em;margin:8px 0 0;font-size:.9rem;color:var(--muted)}
+.hint.bad{color:var(--bad)} .hint.good{color:var(--ok)}
+.btn{border:0;border-radius:10px;padding:13px 20px;font-weight:600;background:var(--ink);color:#fff;width:100%;margin-top:16px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.inline{width:auto;margin-top:0}
+.notice{margin-top:14px;padding:10px 12px;border-radius:10px;background:#FFF4E0;color:var(--warn);font-size:.9rem}
 
-    .slide {
-      display: none;
-    }
+.who{color:var(--muted);margin:6px 0 22px}
+.who b{color:var(--ink);word-break:break-all}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.cand{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.cand .photo{aspect-ratio:4/3;width:100%;object-fit:cover;background:#dde4f2}
+.cand .body{padding:22px;display:flex;flex-direction:column;gap:12px;flex:1}
+.cand .no{font-family:var(--head);font-weight:800;font-size:.95rem;color:var(--cc)}
+.cand h3{font-size:1.4rem}
+.cand h4{margin:0 0 4px;font-size:.9rem;color:var(--muted)}
+.cand p,.cand ul{margin:0;font-size:.95rem}
+.cand ul{padding-left:18px}
+.cand .btn{background:var(--cc);margin-top:auto}
 
-    .slide.active {
-      display: block;
-    }
+.overlay{position:fixed;inset:0;background:rgba(16,27,51,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}
+.overlay[hidden]{display:none}
+.dialog{background:#fff;border-radius:var(--radius);max-width:460px;width:100%;padding:28px;animation:pop .2s ease}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:none;opacity:1}}
+.dialog h2{font-size:1.4rem;margin-bottom:10px}
+.dialog .email{background:var(--paper);padding:10px 12px;border-radius:8px;font-weight:600;word-break:break-all;margin:12px 0}
+.dialog .final{color:var(--bad);font-size:.9rem}
+.dialog .row{display:flex;gap:10px;margin-top:20px}
+.dialog .row .btn{margin:0}
 
-    h2 {
-      color: var(--primary-color);
-      margin-bottom: 10px;
-      text-align: center;
-    }
+.status{display:flex;gap:14px;align-items:flex-start}
+.status .ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;color:#fff;flex:none}
+.status h2{font-size:1.6rem;margin-bottom:4px}
+.status p{margin:0;color:var(--muted)}
+.status.pending .ico{background:var(--c1)}
+.status.success .ico{background:var(--ok)}
+.status.failed .ico{background:var(--bad)}
+.status.already .ico{background:var(--warn)}
+.spin{width:20px;height:20px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 
-    p.subtitle {
-      text-align: center;
-      font-size: 0.9em;
-      color: #666;
-      margin-bottom: 25px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    input[type="email"] {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-      transition: border-color 0.3s;
-    }
-
-    input[type="email"]:focus {
-      border-color: var(--secondary-color);
-      outline: none;
-    }
-
-    .note {
-      font-size: 0.85em;
-      color: #777;
-      margin-top: 8px;
-      line-height: 1.4;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 12px;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .btn:hover {
-      background-color: var(--secondary-color);
-    }
-
-    .btn:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    /* Candidate Cards */
-    .candidates-container {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .candidate-card {
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 15px;
-      text-align: center;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-
-    .candidate-card:hover {
-      border-color: var(--secondary-color);
-      transform: translateY(-2px);
-    }
-
-    .candidate-img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background-color: #ddd;
-      margin: 0 auto 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: #555;
-    }
-
-    .candidate-title {
-      font-weight: bold;
-      font-size: 1.1em;
-      margin-bottom: 5px;
-    }
-
-    .candidate-visi {
-      font-size: 0.9em;
-      color: #555;
-      margin-bottom: 15px;
-      font-style: italic;
-    }
-
-    /* Modal Style */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
-      max-width: 450px;
-      width: 100%;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn-secondary {
-      background-color: #6c757d;
-    }
-
-    .btn-secondary:hover {
-      background-color: #5a6268;
-    }
-
-    /* Quick Count */
-    .bar-container {
-      margin: 15px 0;
-    }
-
-    .bar-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9em;
-      margin-bottom: 5px;
-    }
-
-    .progress-bar {
-      height: 20px;
-      background-color: #e9ecef;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background-color: var(--primary-color);
-      width: 0%;
-      transition: width 0.5s ease-in-out;
-    }
-
-    .error-msg {
-      color: var(--error-color);
-      font-size: 0.85em;
-      margin-top: 5px;
-      display: none;
-    }
-  </style>
+.stats{margin-top:20px}
+.stats-head{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:18px}
+.pill{font-size:.85rem;padding:4px 12px;border-radius:99px;background:#E4F5EC;color:var(--ok);display:inline-flex;align-items:center;gap:6px}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.live::before{animation:blink 1.4s infinite}
+.pill.off{background:#FDE7EA;color:var(--bad)}
+@keyframes blink{50%{opacity:.25}}
+.bar-row{margin-bottom:16px}
+.bar-meta{display:flex;justify-content:space-between;gap:10px;font-weight:600;margin-bottom:6px}
+.track{height:22px;background:#E6EBF4;border-radius:99px;overflow:hidden}
+.fill{height:100%;width:0;border-radius:99px;transition:width .8s ease}
+.total{color:var(--muted);font-size:.9rem;margin-top:6px}
+.fine{color:var(--muted);font-size:.85rem;margin-top:14px}
+</style>
 </head>
 <body>
 
-<div class="container">
+<header class="top">
+  <div class="brand">Pemilu Manajemen 11</div>
+  <ol class="steps" aria-label="Tahapan">
+    <li id="st1" class="on">Masuk</li><li id="st2">Pilih</li><li id="st3">Hasil</li>
+  </ol>
+</header>
 
-  <!-- SLIDE 1: PENGISIAN EMAIL -->
-  <div id="slide1" class="slide active">
-    <h2>Pemilu Manajemen 11</h2>
-    <p class="subtitle">Universitas Siber Muhammadiyah</p>
-    
-    <div class="form-group">
-      <label for="emailInput">Email Kampus Resmi:</label>
-      <input type="email" id="emailInput" placeholder="contoh@sibermu.ac.id">
-      <div id="emailError" class="error-msg">Email wajib berakhiran @sibermu.ac.id dan tidak boleh kosong!</div>
+<main>
+  <!-- SLIDE 1 -->
+  <section class="slide active" id="s1">
+    <div class="panel login">
+      <h1>Masuk ke bilik suara</h1>
+      <p>Gunakan email kampus Anda. Satu email hanya dapat memilih satu kali.</p>
+      <label for="email">Email kampus</label>
+      <input id="email" type="email" autocomplete="email" inputmode="email" placeholder="nama@sibermu.ac.id">
+      <p class="hint" id="emailHint" aria-live="polite"></p>
+      <button class="btn" id="goBtn" disabled>Lanjut memilih</button>
+      <div class="notice" id="cfgWarn" hidden>SCRIPT_URL belum diisi. Buka index.html dan tempel URL Web App Apps Script Anda.</div>
     </div>
+  </section>
 
-    <p class="note">
-      * Catatan: Hanya email berakhiran <strong>@sibermu.ac.id</strong> yang dapat memberikan suara. Setiap email hanya dapat memilih 1 kali.
-    </p>
-    <br>
-    <button class="btn" id="btnNextSlide1" onclick="goToSlide2()">Lanjut ke Bilik Suara →</button>
-  </div>
+  <!-- SLIDE 2 -->
+  <section class="slide" id="s2">
+    <h1>Pilih kandidat</h1>
+    <p class="who">Masuk sebagai <b id="whoEmail"></b></p>
+    <div class="grid" id="cards"></div>
+  </section>
 
-  <!-- SLIDE 2: BILIK SUARA -->
-  <div id="slide2" class="slide">
-    <h2>Pilih Calon Ketua Umum</h2>
-    <p class="subtitle">Silakan tentukan pilihan Anda</p>
-
-    <div class="candidates-container">
-      <!-- Kandidat 1 -->
-      <div class="candidate-card">
-        <div class="candidate-img">Foto 01</div>
-        <div class="candidate-title">Kandidat Nomor 01</div>
-        <div class="candidate-visi">"Mewujudkan HIMA yang Inovatif dan Kolaboratif"</div>
-        <button class="btn" onclick="openModal('Kandidat 01')">Pilih Kandidat 01</button>
-      </div>
-
-      <!-- Kandidat 2 -->
-      <div class="candidate-card">
-        <div class="candidate-img">Foto 02</div>
-        <div class="candidate-title">Kandidat Nomor 02</div>
-        <div class="candidate-visi">"Membangun Sinergi dan Profesionalisme Mahasiswa"</div>
-        <button class="btn" onclick="openModal('Kandidat 02')">Pilih Kandidat 02</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 3: HASIL & QUICK COUNT -->
-  <div id="slide3" class="slide">
-    <h2>Terima Kasih!</h2>
-    <p class="subtitle">Suara Anda telah berhasil direkam.</p>
-
-    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-      <p><strong>Total Suara Masuk:</strong> <span id="totalSuaraText">0</span> Suara</p>
-    </div>
-
-    <h3>Laporan Quick Count Temporary</h3>
-
-    <div class="bar-container">
-      <div class="bar-label">
-        <span>Paslon 01</span>
-        <span id="paslon1Stat">0% (0 Suara)</span>
-      </div>
-      <div class="progress-bar">
-        <div id="paslon1Bar" class="progress-fill" style="width: 0%;"></div>
+  <!-- SLIDE 3 -->
+  <section class="slide" id="s3">
+    <div class="panel">
+      <div class="status pending" id="status">
+        <div class="ico" id="statusIco"><div class="spin"></div></div>
+        <div>
+          <h2 id="statusTitle">Mencatat suara Anda…</h2>
+          <p id="statusText">Mohon tunggu, jangan tutup halaman ini.</p>
+          <div class="actions" id="statusActions" hidden>
+            <button class="btn inline" id="recheckBtn">Cek ulang</button>
+            <button class="btn inline ghost" id="resendBtn">Kirim ulang suara</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="bar-container">
-      <div class="bar-label">
-        <span>Paslon 02</span>
-        <span id="paslon2Stat">0% (0 Suara)</span>
+    <div class="panel stats">
+      <div class="stats-head">
+        <h2>Quick count</h2>
+        <span class="pill live" id="livePill">Menghubungkan…</span>
       </div>
-      <div class="progress-bar">
-        <div id="paslon2Bar" class="progress-fill" style="width: 0%; background-color: var(--secondary-color);"></div>
-      </div>
+      <div id="bars"></div>
+      <div class="total" id="totalTxt"></div>
+      <p class="fine">Data dibaca langsung dari Google Sheets dan diperbarui otomatis setiap beberapa detik. Quick count bersifat sementara.</p>
     </div>
-  </div>
-
-</div>
+  </section>
+</main>
 
 <!-- MODAL KONFIRMASI -->
-<div id="confirmModal" class="modal">
-  <div class="modal-content">
-    <h3>Konfirmasi Pilihan Anda</h3>
-    <p style="margin: 15px 0;">Apakah Anda yakin ingin memberikan suara kepada <strong id="modalCandidate"></strong>?</p>
-    <p style="font-size: 0.9em; color: #555;">Email: <strong id="modalEmail"></strong></p>
-    <p style="font-size: 0.8em; color: var(--error-color); margin-top: 10px;">Pilihan Anda bersifat final dan tidak dapat diubah kembali.</p>
-
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal()">Kembali</button>
-      <button class="btn" id="btnSubmitVote" onclick="submitVote()">Ya, Kirim Suara</button>
+<div class="overlay" id="modal" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <h2 id="mTitle"></h2>
+    <div>Suara akan dicatat atas nama email:</div>
+    <div class="email" id="mEmail"></div>
+    <div class="final">Pilihan tidak dapat diubah setelah dikirim.</div>
+    <div class="row">
+      <button class="btn ghost" id="mCancel">Batal</button>
+      <button class="btn" id="mOk">Ya, kirim suara</button>
     </div>
   </div>
 </div>
 
+<iframe name="vote_frame" id="voteFrame" title="pengiriman suara" style="display:none"></iframe>
+
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxroGQsj26ZbnwskgUyu7l3il9wLQcpvZKKdW82Byo2NgSqWOYdJaj-_h5pJRBnoV6nIg/exec";
+/* ================= KONFIGURASI ================= */
+const CFG = {
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwW8UNwG-iGkbvG-lMsFalmHCsqnLnGgidiRNMeWM6Tp8XUK7ssmKmzyVE807ps4fqm_Q/exec',
+  DOMAIN: 'sibermu.ac.id',
+  MIN_LOCAL: 4, MAX_LOCAL: 64,
+  POLL_MS: 5000,        // interval pembaruan quick count
+  VERIFY_MS: 2000,      // jarak antar pengecekan "suara sudah tercatat?"
+  VERIFY_TRIES: 10,     // total ~20 detik sebelum dianggap gagal
+  CANDIDATES: [
+    { no:1, nama:'Nama Kandidat 1', foto:'', color:'var(--c1)',
+      visi:'Tulis visi kandidat 1 di sini.',
+      misi:['Misi pertama','Misi kedua','Misi ketiga'] },
+    { no:2, nama:'Nama Kandidat 2', foto:'', color:'var(--c2)',
+      visi:'Tulis visi kandidat 2 di sini.',
+      misi:['Misi pertama','Misi kedua','Misi ketiga'] }
+  ]
+};
 
-  let selectedCandidate = "";
-  let userEmail = "";
+/* ================= UTIL ================= */
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const state = { email:'', pick:null, busy:false, pollTimer:null, lastStats:null, lastOk:null };
 
-  function goToSlide2() {
-    const emailInput = document.getElementById("emailInput").value.trim().toLowerCase();
-    const emailError = document.getElementById("emailError");
+function show(n){
+  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active', i===n-1));
+  [1,2,3].forEach(i=>{ const el=$('st'+i); el.className = i===n?'on':(i<n?'done':''); });
+  window.scrollTo({top:0});
+}
 
-    // Validasi email resmi @sibermu.ac.id
-    if (!emailInput.endsWith("@sibermu.ac.id") || emailInput.length <= 13) {
-      emailError.style.display = "block";
-      return;
-    }
+function jsonp(params, timeout=8000){
+  return new Promise((resolve,reject)=>{
+    const cb = 'cb_'+Date.now()+'_'+Math.floor(Math.random()*1e6);
+    const s = document.createElement('script');
+    const t = setTimeout(()=>{ cleanup(); reject(new Error('timeout')); }, timeout);
+    function cleanup(){ clearTimeout(t); delete window[cb]; s.remove(); }
+    window[cb] = d => { cleanup(); resolve(d); };
+    s.onerror = () => { cleanup(); reject(new Error('network')); };
+    const q = new URLSearchParams({...params, callback:cb, _:Date.now()});
+    s.src = CFG.SCRIPT_URL + '?' + q;
+    document.head.appendChild(s);
+  });
+}
 
-    emailError.style.display = "none";
-    userEmail = emailInput;
+function avatar(no, color){
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#dde4f2"/><circle cx="200" cy="120" r="50" fill="#fff"/><path d="M95 300c0-62 47-100 105-100s105 38 105 100z" fill="#fff"/><text x="200" y="135" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="46" fill="#101B33">${pad(no)}</text></svg>`;
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
+}
 
-    document.getElementById("slide1").classList.remove("active");
-    document.getElementById("slide2").classList.add("active");
+/* ================= SLIDE 1: EMAIL ================= */
+const emailRe = new RegExp('^[a-z0-9._-]{'+CFG.MIN_LOCAL+','+CFG.MAX_LOCAL+'}@'+CFG.DOMAIN.replace(/\./g,'\\.')+'$');
+
+function validateEmail(){
+  const v = $('email').value.trim().toLowerCase();
+  const inp = $('email'), hint = $('emailHint');
+  let msg='', cls='', ok=false;
+  if(!v){ msg=''; }
+  else if(!v.includes('@')){ msg='Tambahkan @'+CFG.DOMAIN+' di akhir email.'; cls='bad'; }
+  else if(!v.endsWith('@'+CFG.DOMAIN)){ msg='Hanya email @'+CFG.DOMAIN+' yang dapat memilih.'; cls='bad'; }
+  else if(v.split('@')[0].length < CFG.MIN_LOCAL){ msg='Email terlalu pendek. Periksa kembali penulisannya.'; cls='bad'; }
+  else if(!emailRe.test(v)){ msg='Email hanya boleh berisi huruf, angka, titik, garis bawah, dan strip.'; cls='bad'; }
+  else { msg='Format email sesuai.'; cls='good'; ok=true; }
+  hint.textContent = msg; hint.className = 'hint '+cls;
+  inp.className = cls;
+  $('goBtn').disabled = !ok;
+  return ok ? v : null;
+}
+$('email').addEventListener('input', validateEmail);
+$('email').addEventListener('keydown', e => { if(e.key==='Enter' && !$('goBtn').disabled) $('goBtn').click(); });
+
+$('goBtn').addEventListener('click', async () => {
+  const v = validateEmail(); if(!v) return;
+  state.email = v;
+  const btn = $('goBtn'); btn.disabled = true; btn.textContent = 'Memeriksa…';
+  try{
+    const r = await jsonp({action:'check', email:v});
+    if(r.ok && r.voted){ setStatus('already'); goResult(); return; }
+  }catch(e){ /* server tetap menolak ganda; lanjutkan */ }
+  btn.disabled = false; btn.textContent = 'Lanjut memilih';
+  $('whoEmail').textContent = v;
+  show(2);
+});
+
+/* ================= SLIDE 2: KARTU ================= */
+function renderCards(){
+  const box = $('cards'); box.textContent='';
+  CFG.CANDIDATES.forEach(c=>{
+    const el = document.createElement('article');
+    el.className='panel cand'; el.style.setProperty('--cc', c.color);
+    const img = document.createElement('img');
+    img.className='photo'; img.alt='Foto '+c.nama; img.src = c.foto || avatar(c.no);
+    const body = document.createElement('div'); body.className='body';
+    const no = document.createElement('div'); no.className='no'; no.textContent='Nomor urut '+pad(c.no);
+    const h = document.createElement('h3'); h.textContent=c.nama;
+    const vh = document.createElement('div');
+    vh.innerHTML='<h4>Visi</h4>'; const vp=document.createElement('p'); vp.textContent=c.visi; vh.appendChild(vp);
+    const mh = document.createElement('div'); mh.innerHTML='<h4>Misi</h4>';
+    const ul=document.createElement('ul'); c.misi.forEach(m=>{const li=document.createElement('li'); li.textContent=m; ul.appendChild(li);}); mh.appendChild(ul);
+    const b = document.createElement('button'); b.className='btn'; b.textContent='Pilih kandidat '+pad(c.no);
+    b.addEventListener('click',()=>openModal(c));
+    body.append(no,h,vh,mh,b); el.append(img,body); box.appendChild(el);
+  });
+}
+
+/* ================= MODAL ================= */
+let lastFocus=null;
+function openModal(c){
+  state.pick = c; lastFocus = document.activeElement;
+  $('mTitle').textContent = 'Apakah Anda yakin ingin memberikan suara kepada Kandidat '+pad(c.no)+'?';
+  $('mEmail').textContent = state.email;
+  $('modal').hidden = false; $('mOk').focus();
+}
+function closeModal(){ $('modal').hidden = true; if(lastFocus) lastFocus.focus(); }
+$('mCancel').addEventListener('click', closeModal);
+$('modal').addEventListener('click', e=>{ if(e.target.id==='modal') closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !$('modal').hidden) closeModal(); });
+$('mOk').addEventListener('click', ()=>{ $('modal').hidden = true; startVote(); });
+
+/* ================= PENGIRIMAN & VERIFIKASI ================= */
+function postVote(){
+  const f = document.createElement('form');
+  f.method='POST'; f.action=CFG.SCRIPT_URL; f.target='vote_frame'; f.style.display='none';
+  [['email',state.email],['kandidat',state.pick.no]].forEach(([k,v])=>{
+    const i=document.createElement('input'); i.type='hidden'; i.name=k; i.value=v; f.appendChild(i);
+  });
+  document.body.appendChild(f); f.submit(); f.remove();
+}
+
+async function verifyVoted(){
+  for(let i=0;i<CFG.VERIFY_TRIES;i++){
+    await sleep(CFG.VERIFY_MS);
+    try{
+      const r = await jsonp({action:'check', email:state.email});
+      if(r.ok && r.voted) return true;
+    }catch(e){ state.lastErr = e.message || 'error'; }
   }
+  return false;
+}
 
-  function openModal(kandidat) {
-    selectedCandidate = kandidat;
-    document.getElementById("modalCandidate").innerText = kandidat;
-    document.getElementById("modalEmail").innerText = userEmail;
-    document.getElementById("confirmModal").style.display = "flex";
+async function startVote(resend=false){
+  if(state.busy) return; state.busy = true;
+  setStatus('pending'); goResult();
+  postVote();
+  const ok = await verifyVoted();
+  state.busy = false;
+  setStatus(ok ? 'success' : 'failed');
+  if(!ok) addErrDetail();
+  loadStats();
+}
+function addErrDetail(){
+  const why = state.lastErr==='timeout' ? 'server tidak membalas (cek akses Web App = Anyone dan izin Sheet)'
+            : state.lastErr==='network' ? 'permintaan diblokir atau URL salah'
+            : 'server membalas tetapi suara belum tercatat';
+  $('statusText').textContent += ' Detail: '+why+'.';
+}
+
+/* ================= SLIDE 3: STATUS & QUICK COUNT ================= */
+const STATUS = {
+  pending:{ico:null, t:'Mencatat suara Anda…', p:'Mohon tunggu, jangan tutup halaman ini.'},
+  success:{ico:'✓', t:'Terima kasih!', p:'Suara Anda sudah tercatat. Pantau perolehan suara di bawah.'},
+  failed:{ico:'!', t:'Suara belum tercatat', p:'Koneksi ke server lambat atau terputus. Suara Anda belum masuk, tetapi statistik di bawah tetap diperbarui. Coba cek ulang atau kirim ulang.'},
+  already:{ico:'i', t:'Email ini sudah memilih', p:'Satu email hanya dapat memilih satu kali. Anda tetap bisa memantau hasil sementara di bawah.'}
+};
+function setStatus(k){
+  const s = STATUS[k];
+  $('status').className = 'status '+k;
+  $('statusIco').innerHTML = s.ico ? '' : '<div class="spin"></div>';
+  if(s.ico) $('statusIco').textContent = s.ico;
+  $('statusTitle').textContent = s.t; $('statusText').textContent = s.p;
+  $('statusActions').hidden = (k!=='failed');
+}
+function goResult(){ show(3); loadStats(); startPolling(); }
+
+$('recheckBtn').addEventListener('click', async ()=>{
+  if(state.busy) return; state.busy=true; setStatus('pending');
+  const ok = await verifyVoted(); state.busy=false;
+  setStatus(ok?'success':'failed'); if(!ok) addErrDetail(); loadStats();
+});
+$('resendBtn').addEventListener('click', ()=>{ startVote(true); });
+
+function startPolling(){
+  clearInterval(state.pollTimer);
+  state.pollTimer = setInterval(()=>{ if(!document.hidden) loadStats(); }, CFG.POLL_MS);
+}
+
+function renderStats(d){
+  const box = $('bars'); box.textContent='';
+  CFG.CANDIDATES.forEach(c=>{
+    const n = Number(d.counts[c.no]||0);
+    const pct = d.total ? (n/d.total*100) : 0;
+    const row = document.createElement('div'); row.className='bar-row';
+    const meta = document.createElement('div'); meta.className='bar-meta';
+    const l = document.createElement('span'); l.textContent = pad(c.no)+' · '+c.nama;
+    const r = document.createElement('span'); r.textContent = n+' suara ('+pct.toFixed(1)+'%)';
+    meta.append(l,r);
+    const tr = document.createElement('div'); tr.className='track';
+    tr.setAttribute('role','progressbar'); tr.setAttribute('aria-valuenow',pct.toFixed(1)); tr.setAttribute('aria-valuemin','0'); tr.setAttribute('aria-valuemax','100');
+    const f = document.createElement('div'); f.className='fill'; f.style.background=c.color; f.style.width='0';
+    tr.appendChild(f); row.append(meta,tr); box.appendChild(row);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ f.style.width = pct+'%'; }));
+  });
+  $('totalTxt').textContent = 'Total suara masuk: '+d.total;
+}
+
+function fmtTime(d){ return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()); }
+
+async function loadStats(){
+  const pill = $('livePill');
+  try{
+    const d = await jsonp({action:'stats'});
+    if(!d.ok) throw new Error('bad');
+    state.lastStats = d; state.lastOk = new Date();
+    renderStats(d);
+    pill.className='pill live'; pill.textContent='Live · diperbarui '+fmtTime(state.lastOk);
+  }catch(e){
+    pill.className='pill off';
+    pill.textContent = state.lastOk ? 'Terputus · data terakhir '+fmtTime(state.lastOk)+' · mencoba lagi' : 'Gagal memuat · mencoba lagi';
   }
+}
 
-  function closeModal() {
-    document.getElementById("confirmModal").style.display = "none";
-  }
-
-  function submitVote() {
-    const btnSubmit = document.getElementById("btnSubmitVote");
-    btnSubmit.disabled = true;
-    btnSubmit.innerText = "Mengirim...";
-
-    // Menggunakan URLSearchParams + fetch mode no-cors (Paling aman & tanpa reload)
-    const formData = new URLSearchParams();
-    formData.append("email", userEmail);
-    formData.append("kandidat", selectedCandidate);
-
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: formData.toString()
-    })
-    .then(() => {
-      closeModal();
-      document.getElementById("slide2").classList.remove("active");
-      document.getElementById("slide3").classList.add("active");
-      
-      // Beri jeda 1 detik lalu ambil data quick count
-      setTimeout(loadQuickCount, 1000);
-    })
-    .catch(error => {
-      alert("Terjadi kesalahan pengiriman. Silakan coba lagi.");
-      btnSubmit.disabled = false;
-      btnSubmit.innerText = "Ya, Kirim Suara";
-    });
-  }
-
-  function loadQuickCount() {
-    // Memanggil API via Dynamic Script Tag (JSONP) agar tidak kena blokir CORS
-    const oldScript = document.getElementById("jsonp_script");
-    if (oldScript) oldScript.remove();
-
-    window.handleQuickCountResponse = function(data) {
-      if (data && data.status === "success") {
-        const total = data.totalSuara || 0;
-        const p1 = data.paslon1 || 0;
-        const p2 = data.paslon2 || 0;
-
-        const p1Pct = total > 0 ? Math.round((p1 / total) * 100) : 0;
-        const p2Pct = total > 0 ? Math.round((p2 / total) * 100) : 0;
-
-        document.getElementById("totalSuaraText").innerText = total;
-        
-        document.getElementById("paslon1Stat").innerText = `${p1Pct}% (${p1} Suara)`;
-        document.getElementById("paslon1Bar").style.width = `${p1Pct}%`;
-
-        document.getElementById("paslon2Stat").innerText = `${p2Pct}% (${p2} Suara)`;
-        document.getElementById("paslon2Bar").style.width = `${p2Pct}%`;
-      }
-    };
-
-    const script = document.createElement('script');
-    script.id = "jsonp_script";
-    script.src = `${SCRIPT_URL}?callback=handleQuickCountResponse&t=${new Date().getTime()}`;
-    document.body.appendChild(script);
-  }
+/* ================= INIT ================= */
+renderCards();
+if(!CFG.SCRIPT_URL.startsWith('https://script.google.com/')) $('cfgWarn').hidden = false;
 </script>
-
 </body>
 </html>
