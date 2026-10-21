@@ -245,7 +245,7 @@
     <div class="form-group">
       <label for="emailInput">Email Kampus Resmi:</label>
       <input type="email" id="emailInput" placeholder="contoh@sibermu.ac.id">
-      <div id="emailError" class="error-msg">Email wajib menggunakan domain @sibermu.ac.id</div>
+      <div id="emailError" class="error-msg">Email wajib berakhiran @sibermu.ac.id dan tidak boleh kosong!</div>
     </div>
 
     <p class="note">
@@ -338,8 +338,8 @@
     const emailInput = document.getElementById("emailInput").value.trim().toLowerCase();
     const emailError = document.getElementById("emailError");
 
-    // Perbaikan: Memastikan input email mengandung username minimal 1 karakter sebelum @sibermu.ac.id
-    if (!emailInput.endsWith("@sibermu.ac.id") || emailInput.length <= 14) {
+    // Validasi email resmi @sibermu.ac.id
+    if (!emailInput.endsWith("@sibermu.ac.id") || emailInput.length <= 13) {
       emailError.style.display = "block";
       return;
     }
@@ -367,74 +367,62 @@
     btnSubmit.disabled = true;
     btnSubmit.innerText = "Mengirim...";
 
-    // Membuat iframe rahasia agar pengiriman form tidak terhalang CORS
-    let iframe = document.getElementById("hidden_iframe");
-    if (!iframe) {
-      iframe = document.createElement("iframe");
-      iframe.name = "hidden_iframe";
-      iframe.id = "hidden_iframe";
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
-    }
+    // Menggunakan URLSearchParams + fetch mode no-cors (Paling aman & tanpa reload)
+    const formData = new URLSearchParams();
+    formData.append("email", userEmail);
+    formData.append("kandidat", selectedCandidate);
 
-    let form = document.createElement("form");
-    form.action = SCRIPT_URL;
-    form.method = "POST";
-    form.target = "hidden_iframe";
-
-    let inputEmail = document.createElement("input");
-    inputEmail.type = "hidden";
-    inputEmail.name = "email";
-    inputEmail.value = userEmail;
-    form.appendChild(inputEmail);
-
-    let inputKandidat = document.createElement("input");
-    inputKandidat.type = "hidden";
-    inputKandidat.name = "kandidat";
-    inputKandidat.value = selectedCandidate;
-    form.appendChild(inputKandidat);
-
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-
-    // Beralih ke slide quick count dan load data terbaru
-    setTimeout(() => {
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: formData.toString()
+    })
+    .then(() => {
       closeModal();
-      loadQuickCount();
       document.getElementById("slide2").classList.remove("active");
       document.getElementById("slide3").classList.add("active");
-    }, 1500);
+      
+      // Beri jeda 1 detik lalu ambil data quick count
+      setTimeout(loadQuickCount, 1000);
+    })
+    .catch(error => {
+      alert("Terjadi kesalahan pengiriman. Silakan coba lagi.");
+      btnSubmit.disabled = false;
+      btnSubmit.innerText = "Ya, Kirim Suara";
+    });
   }
 
   function loadQuickCount() {
-    // Memanggil API via Script Tag (JSONP) untuk menghindari pemblokiran CORS
+    // Memanggil API via Dynamic Script Tag (JSONP) agar tidak kena blokir CORS
     const oldScript = document.getElementById("jsonp_script");
     if (oldScript) oldScript.remove();
+
+    window.handleQuickCountResponse = function(data) {
+      if (data && data.status === "success") {
+        const total = data.totalSuara || 0;
+        const p1 = data.paslon1 || 0;
+        const p2 = data.paslon2 || 0;
+
+        const p1Pct = total > 0 ? Math.round((p1 / total) * 100) : 0;
+        const p2Pct = total > 0 ? Math.round((p2 / total) * 100) : 0;
+
+        document.getElementById("totalSuaraText").innerText = total;
+        
+        document.getElementById("paslon1Stat").innerText = `${p1Pct}% (${p1} Suara)`;
+        document.getElementById("paslon1Bar").style.width = `${p1Pct}%`;
+
+        document.getElementById("paslon2Stat").innerText = `${p2Pct}% (${p2} Suara)`;
+        document.getElementById("paslon2Bar").style.width = `${p2Pct}%`;
+      }
+    };
 
     const script = document.createElement('script');
     script.id = "jsonp_script";
     script.src = `${SCRIPT_URL}?callback=handleQuickCountResponse&t=${new Date().getTime()}`;
     document.body.appendChild(script);
-  }
-
-  function handleQuickCountResponse(data) {
-    if (data.status === "success") {
-      const total = data.totalSuara;
-      const p1 = data.paslon1;
-      const p2 = data.paslon2;
-
-      const p1Pct = total > 0 ? Math.round((p1 / total) * 100) : 0;
-      const p2Pct = total > 0 ? Math.round((p2 / total) * 100) : 0;
-
-      document.getElementById("totalSuaraText").innerText = total;
-      
-      document.getElementById("paslon1Stat").innerText = `${p1Pct}% (${p1} Suara)`;
-      document.getElementById("paslon1Bar").style.width = `${p1Pct}%`;
-
-      document.getElementById("paslon2Stat").innerText = `${p2Pct}% (${p2} Suara)`;
-      document.getElementById("paslon2Bar").style.width = `${p2Pct}%`;
-    }
   }
 </script>
 
