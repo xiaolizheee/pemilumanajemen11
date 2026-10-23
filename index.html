@@ -9,7 +9,7 @@
 <style>
 :root{
   --ink:#101B33; --muted:#5B6781; --paper:#EDF1F7; --card:#fff; --line:#D5DDEA;
-  --c1:#2447F5; --c2:#0E9F8E; --ok:#14804A; --bad:#C62F3E; --warn:#B45F06;
+  --c1:#2447F5; --c2:#0E9F8E; --c3:#C2410C; --ok:#14804A; --bad:#C62F3E; --warn:#B45F06;
   --radius:14px;
   --head:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
   --body:'Instrument Sans','Segoe UI',system-ui,sans-serif;
@@ -21,14 +21,14 @@ h1,h2,h3{font-family:var(--head);margin:0;line-height:1.15}
 button{font:inherit;cursor:pointer}
 :focus-visible{outline:3px solid #8FA2FF;outline-offset:2px}
 
-.top{max-width:960px;margin:0 auto;padding:22px 20px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.top{max-width:1100px;margin:0 auto;padding:22px 20px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
 .brand{font-family:var(--head);font-weight:800;font-size:1.15rem}
 .steps{display:flex;gap:8px;list-style:none;margin:0;padding:0;font-size:.85rem;color:var(--muted)}
 .steps li{padding:4px 12px;border-radius:99px;border:1px solid var(--line);background:#fff}
 .steps li.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .steps li.done{color:var(--ok);border-color:#BFE3CF}
 
-main{max-width:960px;margin:0 auto;padding:28px 20px 60px}
+main{max-width:1100px;margin:0 auto;padding:28px 20px 60px}
 .slide{display:none}
 .slide.active{display:block;animation:in .35s ease}
 @keyframes in{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
@@ -52,15 +52,16 @@ input[type=email].good{border-color:var(--ok)}
 
 .who{color:var(--muted);margin:6px 0 22px}
 .who b{color:var(--ink);word-break:break-all}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:stretch}
 .cand{padding:0;overflow:hidden;display:flex;flex-direction:column}
 .cand .photo{aspect-ratio:4/3;width:100%;object-fit:cover;background:#dde4f2}
 .cand .body{padding:22px;display:flex;flex-direction:column;gap:12px;flex:1}
 .cand .no{font-family:var(--head);font-weight:800;font-size:.95rem;color:var(--cc)}
 .cand h3{font-size:1.4rem}
 .cand h4{margin:0 0 4px;font-size:.9rem;color:var(--muted)}
-.cand p,.cand ul{margin:0;font-size:.95rem}
-.cand ul{padding-left:18px}
+.cand p,.cand ul,.cand ol{margin:0;font-size:.95rem}
+.cand ul,.cand ol{padding-left:20px}
+.cand li{margin-bottom:4px}
 .cand .btn{background:var(--cc);margin-top:auto}
 
 .overlay{position:fixed;inset:0;background:rgba(16,27,51,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}
@@ -184,12 +185,32 @@ const CFG = {
   VERIFY_MS: 2000,      // jarak antar pengecekan "suara sudah tercatat?"
   VERIFY_TRIES: 10,     // total ~20 detik sebelum dianggap gagal
   CANDIDATES: [
-    { no:1, nama:'JAJANG', foto:'', color:'var(--c1)',
-      visi:'HHIDUP JOKOWIIIII.',
-      misi:['Misi pertama MBG','Misi kedua KOPDES','Misi ketiga SAWIT'] },
-    { no:2, nama:'FIKKS', foto:'', color:'var(--c2)',
-      visi:'MUKBANG NNASPAD DI PADANNG.',
-      misi:['Misi pertama COTO','Misi kedua PISANNG IJO','Misi ketiga NASPAD LAAGI'] }
+    { no:1, nama:'Abdullah Zhafran', foto:'', color:'var(--c1)',
+      visi:'Mewujudkan Angkatan Manajemen SiberMu 11 sebagai keluarga akademik yang solid, setara, inklusif, dan saling menguatkan—bebas dari politik internal—serta mengedepankan kebersamaan yang santai, beretika, dan demokratis demi melangkah bersama secara harmonis hingga kelulusan.',
+      misi:[
+        'Membangun Ekosistem Komunikasi yang Terstruktur, Setara, dan Nyaman',
+        'Kepemimpinan yang Setara, Demokratis, dan Anti-Politik Internal',
+        'Pemilahan Kebijakan Akademik vs. Kesepakatan Internal',
+        'Manajemen Konflik, Penegakan Aturan, dan Mediasi Cepat',
+        'Budaya Saling Mendukung dan Pendampingan Akademik Kolektif'
+      ] },
+    { no:2, nama:'Muhammad Hafidz Chandra Notancara', foto:'', color:'var(--c2)',
+      visi:'Menjadikan angkatan sebagai ruang peradaban mahasiswa yang demokratis, transparan, dan adil tempat aspirasi didengar, kritik tidak dianggap sebagai pemberontakan, dan jabatan ketua angkatan tidak berubah menjadi kerajaan kecil dengan grup WhatsApp sebagai istananya.',
+      misi:[
+        'Demokrasi tanpa mode pesawat',
+        'Informasi satu pintu, bukan satu misteri',
+        'Admin berwenang, bukan penguasa galaksi',
+        'Kritik itu untuk didengar, bukan disimpan sebagai dendam',
+        'Jabatan itu amanah, bukan singgasana',
+        'Kuliah tetap prioritas utama, jangan sampai drama jadi mata kuliah tambahan'
+      ] },
+    { no:3, nama:'Sidhiq Akbar Nugraha', foto:'', color:'var(--c3)',
+      visi:'Mewujudkan Angkatan yang Progresif, Saling Mendukung, dan Berdaya Saing melalui Penguatan Ekosistem Akademik Digital serta Solidaritas Inklusif demi Mencapai Kelulusan Tepat Waktu.',
+      misi:[
+        'Membangun sistem dukungan akademik internal yang terintegrasi untuk membantu seluruh mahasiswa mencapai target studi dan kelulusan tepat waktu.',
+        'Menciptakan komunikasi yang efektif dan kepemimpinan berbasis empati guna menjembatani aspirasi mahasiswa dengan pihak program studi maupun kampus.',
+        'Mengoptimalkan potensi dan kreativitas angkatan melalui wadah kolaborasi lintas latar belakang serta pemanfaatan teknologi digital secara terarah.'
+      ] }
   ]
 };
 
@@ -272,7 +293,7 @@ function renderCards(){
     const vh = document.createElement('div');
     vh.innerHTML='<h4>Visi</h4>'; const vp=document.createElement('p'); vp.textContent=c.visi; vh.appendChild(vp);
     const mh = document.createElement('div'); mh.innerHTML='<h4>Misi</h4>';
-    const ul=document.createElement('ul'); c.misi.forEach(m=>{const li=document.createElement('li'); li.textContent=m; ul.appendChild(li);}); mh.appendChild(ul);
+    const ol=document.createElement('ol'); c.misi.forEach(m=>{const li=document.createElement('li'); li.textContent=m; ol.appendChild(li);}); mh.appendChild(ol);
     const b = document.createElement('button'); b.className='btn'; b.textContent='Pilih kandidat '+pad(c.no);
     b.addEventListener('click',()=>openModal(c));
     body.append(no,h,vh,mh,b); el.append(img,body); box.appendChild(el);
@@ -283,7 +304,7 @@ function renderCards(){
 let lastFocus=null;
 function openModal(c){
   state.pick = c; lastFocus = document.activeElement;
-  $('mTitle').textContent = 'Apakah Anda yakin ingin memberikan suara kepada Kandidat '+pad(c.no)+'?';
+  $('mTitle').textContent = 'Apakah Anda yakin ingin memberikan suara kepada Kandidat '+pad(c.no)+' ('+c.nama+')?';
   $('mEmail').textContent = state.email;
   $('modal').hidden = false; $('mOk').focus();
 }
