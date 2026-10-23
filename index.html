@@ -186,7 +186,7 @@ const FOTO = {
 <script>
 /* ================= KONFIGURASI ================= */
 const CFG = {
-  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwW8UNwG-iGkbvG-lMsFalmHCsqnLnGgidiRNMeWM6Tp8XUK7ssmKmzyVE807ps4fqm_Q/exec',
+  SCRIPT_URL: 'https://script.google.com/a/macros/sibermu.ac.id/s/AKfycbwW8UNwG-iGkbvG-lMsFalmHCsqnLnGgidiRNMeWM6Tp8XUK7ssmKmzyVE807ps4fqm_Q/exec',
   DOMAIN: 'sibermu.ac.id',
   MIN_LOCAL: 4, MAX_LOCAL: 64,
   POLL_MS: 5000,        // interval pembaruan quick count
@@ -335,6 +335,7 @@ function postVote(){
 async function verifyVoted(){
   for(let i=0;i<CFG.VERIFY_TRIES;i++){
     await sleep(CFG.VERIFY_MS);
+    state.lastErr = '';
     try{
       const r = await jsonp({action:'check', email:state.email});
       if(r.ok && r.voted) return true;
@@ -356,7 +357,7 @@ async function startVote(resend=false){
 function addErrDetail(){
   const why = state.lastErr==='timeout' ? 'server tidak membalas (cek akses Web App = Anyone dan izin Sheet)'
             : state.lastErr==='network' ? 'permintaan diblokir atau URL salah'
-            : 'server membalas tetapi suara belum tercatat';
+            : 'server membalas tetapi suara tidak tercatat (ditolak server, atau kode Apps Script belum diperbarui/di-deploy)';
   $('statusText').textContent += ' Detail: '+why+'.';
 }
 
